@@ -12,6 +12,7 @@ import { CASE_STUDIES } from './data/caseStudies'
 import { FILTERS } from './data/filters'
 import { POLLS } from './data/polls'
 import { scoreCaseStudy } from './utils/search'
+import { isRecent } from './utils/isRecent'
 import { AnimatePresence, motion } from './utils/motion'
 
 function MainPage({ onOpenCase }) {
@@ -19,7 +20,18 @@ function MainPage({ onOpenCase }) {
   const [query, setQuery] = useState('')
   const [pollIndex, setPollIndex] = useState(0)
 
-  const enriched = useMemo(() => CASE_STUDIES.map((item, index) => ({ ...item, isRecent: index === 0 })), [])
+  const enriched = useMemo(
+    () =>
+      CASE_STUDIES.map((item) => {
+        const recent = isRecent(item.date)
+        return {
+          ...item,
+          isRecent: recent,
+          badgeLabel: item.featured ? 'Featured' : recent ? 'Recent' : null,
+        }
+      }),
+    [],
+  )
 
   const filtered = useMemo(() => {
     return enriched
