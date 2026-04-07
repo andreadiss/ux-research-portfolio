@@ -38,7 +38,7 @@ function CaseStudyPage({ item, onBack }) {
   ]
 
   return (
-    <div className="min-h-screen bg-surface-modal text-primary">
+    <div className="min-h-screen overflow-y-auto bg-surface-modal text-primary">
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -59,8 +59,8 @@ function CaseStudyPage({ item, onBack }) {
       <motion.section initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }} className="px-4 md:px-8 lg:px-10 pt-6 md:pt-8">
         <div className="relative h-[58vh] md:h-[72vh] rounded-[2rem] overflow-hidden border border-subtle">
           <img src={item.cover} alt={item.title} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 overlay-image-top" />
-          <div className="absolute inset-0 overlay-image-bottom" />
+          <div className="absolute inset-0 overlay-image-top pointer-events-none" />
+          <div className="absolute inset-0 overlay-image-bottom pointer-events-none" />
           <div className="absolute left-0 right-0 top-0 p-5 md:p-6 flex flex-wrap gap-2">
             <span className="px-3 py-1 rounded-full text-[10px] uppercase tracking-widest chip-category">{item.category}</span>
             {item.tags.map((tag) => (
