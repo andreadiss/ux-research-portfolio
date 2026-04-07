@@ -157,13 +157,6 @@ export default function App() {
     window.localStorage.setItem('theme', theme)
   }, [theme])
 
-  useEffect(() => {
-    document.body.style.overflow = active ? 'hidden' : ''
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [active])
-
   return (
     <div className="font-serif antialiased app-shell text-primary">
       <style>{`
@@ -183,7 +176,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.24, ease: 'easeOut' }}
-              className="fixed inset-0 z-30 backdrop-blur-lg"
+              className="fixed inset-0 z-30 backdrop-blur-lg pointer-events-none"
               style={{ background: "var(--overlay-strong)" }}
               aria-hidden="true"
             />
@@ -193,7 +186,7 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.99 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-40"
+              className="relative z-40 min-h-screen overflow-y-auto"
             >
               <CaseStudyPage item={active} onBack={() => setActive(null)} />
             </motion.div>
