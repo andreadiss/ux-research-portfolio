@@ -28,7 +28,6 @@ function MainPage({ onOpenCase }) {
         return {
           ...item,
           isRecent: recent,
-          badgeLabel: item.featured ? 'Featured' : recent ? 'Recent' : null,
         }
       }),
     [],
@@ -47,13 +46,20 @@ function MainPage({ onOpenCase }) {
     )
   }, [enriched, filter, query])
 
-  const feedItems = useMemo(() => {
-    const output = []
-    filtered.forEach((item, index) => {
-      output.push({ type: 'case', data: item })
-      if (index === 1) output.push({ type: 'poll' })
-    })
-    return output
+  const editorialFeed = useMemo(() => {
+    if (filtered.length === 0) return null
+
+    const featured = filtered.find((item) => item.featured) ?? filtered[0]
+    const remainingAfterFeatured = filtered.filter((item) => item.id !== featured.id)
+    const recent = [...remainingAfterFeatured].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0] ?? null
+    const remaining = remainingAfterFeatured.filter((item) => item.id !== recent?.id)
+
+    return {
+      featured,
+      rowTwoCases: remaining.slice(0, 2),
+      rowThreeSmall: remaining[2] ?? null,
+      recent,
+    }
   }, [filtered])
 
   return (
@@ -73,17 +79,31 @@ function MainPage({ onOpenCase }) {
         </div>
       </div>
 
-      <main id="feed" className="px-4 md:px-8 lg:px-10 py-6 md:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-        {feedItems.length === 0 ? (
+      <main id="feed" className="px-4 md:px-8 lg:px-10 py-6 md:py-8 space-y-5 md:space-y-6">
+        {!editorialFeed ? (
           <div className="col-span-full rounded-[1.6rem] border border-subtle bg-surface p-10 text-center text-muted">No matches found. Try broader terms.</div>
         ) : (
-          feedItems.map((item, index) =>
-            item.type === 'poll' ? (
-              <PollCard key={`poll-${pollIndex}-${index}`} poll={POLLS[pollIndex]} onNext={() => setPollIndex((prev) => (prev + 1) % POLLS.length)} />
-            ) : (
-              <FeedCard key={item.data.id} item={item.data} onOpen={onOpenCase} large={item.data.isRecent} />
-            ),
-          )
+          <>
+            <div>
+              <FeedCard item={editorialFeed.featured} onOpen={onOpenCase} variant="featured" badgeLabel="Featured" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {editorialFeed.rowTwoCases.map((item) => (
+                <FeedCard key={item.id} item={item} onOpen={onOpenCase} variant="small" />
+              ))}
+              <PollCard key={`poll-${pollIndex}`} poll={POLLS[pollIndex]} onNext={() => setPollIndex((prev) => (prev + 1) % POLLS.length)} />
+            </div>
+
+            {(editorialFeed.rowThreeSmall || editorialFeed.recent) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                {editorialFeed.rowThreeSmall ? <FeedCard item={editorialFeed.rowThreeSmall} onOpen={onOpenCase} variant="small" /> : <div className="hidden lg:block" />}
+                {editorialFeed.recent ? (
+                  <FeedCard item={editorialFeed.recent} onOpen={onOpenCase} variant="recent" badgeLabel="Recent" badgePulse />
+                ) : null}
+              </div>
+            )}
+          </>
         )}
       </main>
 
