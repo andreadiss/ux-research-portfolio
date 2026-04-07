@@ -1,5 +1,33 @@
-export const CASE_STUDIES = [
-  {
+const createCaseStudy = ({
+  id,
+  title,
+  category,
+  tags,
+  cover,
+  subtitle,
+  context,
+  challenge,
+  approach,
+  insights,
+  impact,
+  visuals = [],
+}) => ({
+  id,
+  title,
+  category,
+  tags,
+  cover,
+  subtitle,
+  context,
+  challenge,
+  approach,
+  insights,
+  impact,
+  visuals,
+})
+
+const APP_CASE_STUDIES = [
+  createCaseStudy({
     id: 'app-1',
     title: 'Streaming App Redesign',
     category: 'App',
@@ -15,8 +43,8 @@ export const CASE_STUDIES = [
       'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1600&q=80',
       'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80',
     ],
-  },
-  {
+  }),
+  createCaseStudy({
     id: 'app-2',
     title: 'Finance App Navigation',
     category: 'App',
@@ -29,8 +57,8 @@ export const CASE_STUDIES = [
     insights: 'Clearer naming and more deliberate prioritization enabled users to understand the structure faster and act with less uncertainty.',
     impact: 'The work created a more intuitive foundation for task completion and future feature growth.',
     visuals: ['https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80'],
-  },
-  {
+  }),
+  createCaseStudy({
     id: 'app-3',
     title: 'Smart TV Onboarding',
     category: 'App',
@@ -43,8 +71,11 @@ export const CASE_STUDIES = [
     insights: 'Reducing effort was less about removing steps and more about making transitions feel obvious and predictable.',
     impact: 'The new direction created a more reassuring first-use experience.',
     visuals: ['https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80'],
-  },
-  {
+  }),
+]
+
+const WEBSITE_CASE_STUDIES = [
+  createCaseStudy({
     id: 'web-1',
     title: 'Editorial Platform Evolution',
     category: 'Website',
@@ -60,8 +91,8 @@ export const CASE_STUDIES = [
       'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1600&q=80',
       'https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=1600&q=80',
     ],
-  },
-  {
+  }),
+  createCaseStudy({
     id: 'web-2',
     title: 'News Homepage Hierarchy',
     category: 'Website',
@@ -74,8 +105,8 @@ export const CASE_STUDIES = [
     insights: 'Attention was highly selective; the strongest layouts made relevance and structure visible right away.',
     impact: 'The output helped align design choices around salience, recall and editorial clarity.',
     visuals: ['https://images.unsplash.com/photo-1516321310764-8d0f1b5c0c20?auto=format&fit=crop&w=1600&q=80'],
-  },
-  {
+  }),
+  createCaseStudy({
     id: 'web-3',
     title: 'Cross-platform Flow',
     category: 'Website',
@@ -88,12 +119,15 @@ export const CASE_STUDIES = [
     insights: 'Consistency works best when behavior, expectations and context of use are considered together.',
     impact: 'The work informed clearer cross-platform patterns and more cohesive design decisions.',
     visuals: ['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80'],
-  },
-  {
+  }),
+]
+
+const AI_CASE_STUDIES = [
+  createCaseStudy({
     id: 'ai-1',
     title: 'AI Personalization System',
     category: 'AI',
-    tags: ['Ai', 'qualitative research'],
+    tags: ['ai', 'qualitative research'],
     cover: '/images/ai-personalization/cover.svg',
     subtitle: 'Making AI useful, clear and actionable',
     context: 'We tested a new AI agent within Sky.it to understand how people perceive it, when they recognize it and how it supports decision-making during exploration.',
@@ -107,12 +141,12 @@ export const CASE_STUDIES = [
       '/images/ai-personalization/visual-3.svg',
       '/images/ai-personalization/visual-4.svg',
     ],
-  },
-  {
+  }),
+  createCaseStudy({
     id: 'genai-1',
     title: 'GenAI Assistant Research',
     category: 'AI',
-    tags: ['Ai', 'quantitative research'],
+    tags: ['ai', 'quantitative research'],
     cover: '/images/genai-assistant/cover.svg',
     subtitle: 'Selecting the right voice for a virtual assistant',
     context: 'We evaluated multiple AI voices to identify the best fit for Sky’s virtual assistant, focusing on perception, trust and interaction propensity.',
@@ -126,5 +160,13 @@ export const CASE_STUDIES = [
       '/images/genai-assistant/visual-3.svg',
       '/images/genai-assistant/visual-4.svg',
     ],
-  },
+  }),
 ]
+
+export const CASE_STUDY_GROUPS = {
+  app: APP_CASE_STUDIES,
+  website: WEBSITE_CASE_STUDIES,
+  ai: AI_CASE_STUDIES,
+}
+
+export const CASE_STUDIES = [...APP_CASE_STUDIES, ...WEBSITE_CASE_STUDIES, ...AI_CASE_STUDIES]
