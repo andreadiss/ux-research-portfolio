@@ -70,7 +70,7 @@ function CaseStudyPage({ item, onBack }) {
             ))}
           </div>
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 lg:p-10 text-white">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.96] max-w-5xl">{item.title}</h1>
+            <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.96] max-w-5xl">{item.title}</h1>
             <p className="mt-4 text-white/80 text-base md:text-2xl leading-relaxed max-w-3xl">{item.subtitle}</p>
           </div>
         </div>

@@ -87,7 +87,7 @@ function MainPage({ onOpenCase }) {
       <section className="px-4 md:px-8 lg:px-10 py-16 md:py-24 border-t border-subtle">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <div>
-            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight">About</h2>
+            <h2 className="font-heading text-2xl md:text-4xl font-semibold tracking-tight">About</h2>
           </div>
           <div>
             <p className="text-secondary text-base md:text-xl leading-relaxed max-w-2xl">
@@ -107,11 +107,11 @@ function MainPage({ onOpenCase }) {
       <section className="px-4 md:px-8 lg:px-10 py-16 md:py-24 border-t border-subtle">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16 items-start">
           <div>
-            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight">Contact</h2>
+            <h2 className="font-heading text-2xl md:text-4xl font-semibold tracking-tight">Contact</h2>
           </div>
           <div>
             <div className="flex flex-col gap-5">
-              <h3 className="text-primary text-2xl md:text-5xl font-semibold tracking-tight">Let’s work together</h3>
+              <h3 className="font-heading text-primary text-2xl md:text-5xl font-semibold tracking-tight">Let’s work together</h3>
               <div className="flex flex-col gap-4 text-secondary text-base md:text-lg">
                 <a className="inline-flex items-center gap-3 transition-colors hover:text-primary" href="mailto:hello@yourportfolio.com">
                   <Mail size={18} />
@@ -170,13 +170,7 @@ export default function App() {
   }, [theme])
 
   return (
-    <div className="font-serif antialiased app-shell text-primary">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap');
-        html { scroll-behavior: smooth; }
-        body { margin: 0; font-family: 'Playfair Display', serif; }
-      `}</style>
-
+    <div className="font-ui antialiased app-shell text-primary">
       <ThemeToggle theme={theme} onToggle={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))} />
 
       <AnimatePresence mode="wait">
