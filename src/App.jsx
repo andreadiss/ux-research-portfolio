@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import Hero from './components/Hero'
 import FeedCard from './components/FeedCard'
@@ -6,6 +6,7 @@ import PollCard from './components/PollCard'
 import SearchBar from './components/SearchBar'
 import CaseStudyPage from './components/CaseStudyPage'
 import Pill from './components/Pill'
+import ThemeToggle from './components/ThemeToggle'
 import { Mail, Linkedin } from './components/icons'
 import { CASE_STUDIES } from './data/caseStudies'
 import { FILTERS } from './data/filters'
@@ -41,10 +42,10 @@ function MainPage({ onOpenCase }) {
   }, [filtered])
 
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="app-shell min-h-screen">
       <Hero onExplore={() => document.getElementById('feed')?.scrollIntoView({ behavior: 'smooth' })} />
 
-      <div className="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-y border-white/10">
+      <div className="sticky top-0 z-40 app-topbar backdrop-blur-xl border-y border-white/10">
         <div className="flex flex-col gap-3 px-4 md:px-8 py-3">
           <SearchBar query={query} setQuery={setQuery} />
           <div className="flex gap-2 overflow-x-auto no-scrollbar">
@@ -137,8 +138,24 @@ function DevTestCases() {
   )
 }
 
+const getInitialTheme = () => {
+  if (typeof window === 'undefined') return 'dark'
+  const saved = window.localStorage.getItem('theme')
+  return saved === 'light' || saved === 'dark' ? saved : 'dark'
+}
+
 export default function App() {
   const [active, setActive] = useState(null)
+  const [theme, setTheme] = useState(getInitialTheme)
+
+  useLayoutEffect(() => {
+    document.documentElement.classList.remove('dark', 'light')
+    document.documentElement.classList.add(theme)
+  }, [theme])
+
+  useEffect(() => {
+    window.localStorage.setItem('theme', theme)
+  }, [theme])
 
   useEffect(() => {
     document.body.style.overflow = active ? 'hidden' : ''
@@ -148,14 +165,16 @@ export default function App() {
   }, [active])
 
   return (
-    <div className="font-serif antialiased bg-black text-white">
+    <div className="font-serif antialiased app-shell text-white">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap');
         html { scroll-behavior: smooth; }
-        body { margin: 0; background: #000; font-family: 'Playfair Display', serif; }
+        body { margin: 0; font-family: 'Playfair Display', serif; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
+
+      <ThemeToggle theme={theme} onToggle={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))} />
 
       <AnimatePresence mode="wait">
         {active ? (
