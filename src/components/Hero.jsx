@@ -14,7 +14,7 @@ function Hero({ onExplore }) {
 
         <div className="relative z-10 flex h-full items-end md:items-center p-6 md:p-12 lg:p-16">
           <div className="max-w-4xl">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl text-white font-semibold tracking-tight leading-[0.95]">Designing experiences through customers insight</h1>
+            <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl text-white font-semibold tracking-tight leading-[0.95]">Designing experiences through customers insight</h1>
             <p className="mt-5 max-w-2xl text-white/80 text-base md:text-xl leading-relaxed">
               Remove opinionism from product decisions, get clear data-driven insights directly from your customers.
             </p>

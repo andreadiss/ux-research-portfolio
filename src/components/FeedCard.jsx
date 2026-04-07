@@ -48,7 +48,7 @@ function FeedCard({ item, onOpen, large = false }) {
           )}
 
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h3 className="text-white text-xl font-semibold tracking-tight">{item.title}</h3>
+            <h3 className="font-heading text-white text-xl font-semibold tracking-tight">{item.title}</h3>
             <p className="text-white/70 text-sm mt-1">{item.subtitle}</p>
           </div>
         </div>

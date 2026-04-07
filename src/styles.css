@@ -4,6 +4,8 @@
 
 :root {
   color-scheme: dark;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --bg-app: #050505;
   --bg-surface: rgba(255, 255, 255, 0.05);
   --bg-surface-strong: rgba(255, 255, 255, 0.09);
@@ -84,7 +86,21 @@ body {
   margin: 0;
   background: var(--bg-app);
   color: var(--text-primary);
+  font-family: var(--font-sans);
   transition: background-color 260ms ease, color 260ms ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.font-heading {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
+}
+
+.font-ui {
+  font-family: var(--font-sans);
 }
 
 .app-shell {
@@ -118,6 +134,7 @@ body {
   background: var(--chip-default-bg);
   color: var(--chip-default-text);
   border: 1px solid var(--chip-default-border);
+  font-family: var(--font-sans);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -126,6 +143,7 @@ body {
   background: var(--chip-category-bg);
   color: var(--chip-category-text);
   border: 1px solid var(--chip-category-border);
+  font-family: var(--font-sans);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -133,6 +151,7 @@ body {
 .button-primary {
   background: var(--button-primary-bg);
   color: var(--button-primary-text);
+  font-family: var(--font-sans);
 }
 
 .button-primary:hover { background: var(--button-primary-hover); }
@@ -141,6 +160,7 @@ body {
   background: var(--button-secondary-bg);
   color: var(--button-secondary-text);
   border: 1px solid var(--button-secondary-border);
+  font-family: var(--font-sans);
 }
 
 .button-secondary:hover { background: var(--button-secondary-hover); }
@@ -149,6 +169,7 @@ body {
   background: var(--input-bg);
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
+  font-family: var(--font-sans);
 }
 
 .input-surface::placeholder {
