@@ -9,7 +9,9 @@ function Pill({ children, active = false, onClick }) {
       onClick={onClick}
       className={classNames(
         'rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] transition whitespace-nowrap',
-        active ? 'bg-white text-black border-white' : 'text-white/70 border-white/10 bg-white/5 hover:border-white/20 hover:text-white',
+        active
+          ? 'button-primary border-transparent'
+          : 'text-secondary border-subtle bg-surface hover:text-primary hover:border-strong hover:bg-surface-strong',
       )}
     >
       {children}
