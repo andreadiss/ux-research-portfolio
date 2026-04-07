@@ -2,6 +2,124 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #050505;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.1);
+  --surface-overlay: rgba(0, 0, 0, 0.85);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.28);
+  --text: #f8f8f8;
+  --text-soft: rgba(248, 248, 248, 0.8);
+  --text-muted: rgba(248, 248, 248, 0.64);
+  --inverse: #0a0a0a;
+  --inverse-bg: #ffffff;
+  --topbar: rgba(6, 6, 6, 0.9);
+}
+
+:root.light {
+  --bg: #f6f6f2;
+  --surface: rgba(0, 0, 0, 0.04);
+  --surface-strong: rgba(0, 0, 0, 0.075);
+  --surface-overlay: rgba(245, 245, 242, 0.86);
+  --line: rgba(17, 17, 17, 0.14);
+  --line-strong: rgba(17, 17, 17, 0.24);
+  --text: #111111;
+  --text-soft: rgba(17, 17, 17, 0.84);
+  --text-muted: rgba(17, 17, 17, 0.64);
+  --inverse: #ffffff;
+  --inverse-bg: #111111;
+  --topbar: rgba(246, 246, 242, 0.88);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 260ms ease, color 260ms ease;
+}
+
+.app-shell {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 260ms ease, color 260ms ease;
+}
+
+.app-topbar {
+  background: var(--topbar);
+}
+
+.theme-toggle {
+  color: var(--text);
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+}
+
+.theme-toggle__icon {
+  display: inline-flex;
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 240ms ease, opacity 240ms ease;
+}
+
+.theme-toggle:hover .theme-toggle__icon {
+  transform: scale(1.08);
+}
+
+.light .theme-toggle {
+  box-shadow: 0 10px 30px rgba(17, 17, 17, 0.1);
+}
+
+/* Theme mappings for existing utility classes */
+[class*='bg-black'] {
+  background-color: var(--bg) !important;
+}
+
+[class*='text-white'] {
+  color: var(--text) !important;
+}
+
+[class*='border-white'] {
+  border-color: var(--line) !important;
+}
+
+[class*='bg-white/'] {
+  background-color: var(--surface) !important;
+}
+
+[class*='text-black'] {
+  color: var(--inverse) !important;
+}
+
+[class*='bg-white']:not([class*='bg-white/']) {
+  background-color: var(--inverse-bg) !important;
+}
+
+.light [class*='bg-gradient-to-b from-black/35 via-black/35 to-black/88'],
+.light [class*='bg-gradient-to-b from-black/20 via-black/35 to-black/92'] {
+  background: linear-gradient(to bottom, rgba(246, 246, 242, 0.1), rgba(246, 246, 242, 0.2), rgba(246, 246, 242, 0.82)) !important;
+}
+
+.light [class*='bg-gradient-to-t from-black/95 via-black/25 to-transparent'] {
+  background: linear-gradient(to top, rgba(246, 246, 242, 0.9), rgba(246, 246, 242, 0.18), transparent) !important;
+}
+
+.light [class*='shadow-[0_20px_60px_rgba(0,0,0,0.35)]'] {
+  box-shadow: 0 20px 60px rgba(17, 17, 17, 0.12) !important;
+}
+
+.light [class*='bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_60%)]'] {
+  background: radial-gradient(circle at center, rgba(17, 17, 17, 0.08), transparent 60%) !important;
+}
+
+.light .backdrop-blur-xl,
+.light .backdrop-blur,
+.light .backdrop-blur-lg {
+  backdrop-filter: blur(16px) saturate(120%);
 }
