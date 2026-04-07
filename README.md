@@ -28,6 +28,19 @@ src/
   styles.css
 ```
 
+
+## Important
+
+Do not serve `index.html` directly from a static file server in the project root. This app uses JSX modules that must be transformed by Vite.
+
+Use one of these commands instead:
+
+```bash
+npm run dev
+# or
+npm run build && npm run preview
+```
+
 ## Local development
 
 ```bash
