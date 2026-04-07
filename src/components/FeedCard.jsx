@@ -37,7 +37,7 @@ function FeedCard({ item, onOpen, large = false }) {
 
           {item.badgeLabel && (
             <div className="absolute top-12 left-4">
-              <span className="px-3 py-1 text-[10px] uppercase rounded-full chip-default inline-flex items-center gap-2">
+              <span className="px-3.5 py-1.5 text-[10px] uppercase rounded-full chip-badge inline-flex items-center gap-2">
                 <span className="recent-dot" aria-hidden="true">
                   <span className="recent-dot__pulse" />
                   <span className="recent-dot__pulse recent-dot__pulse--delay" />

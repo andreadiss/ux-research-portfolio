@@ -12,6 +12,7 @@ import { CASE_STUDIES } from './data/caseStudies'
 import { FILTERS } from './data/filters'
 import { POLLS } from './data/polls'
 import { scoreCaseStudy } from './utils/search'
+import { sortCaseStudies } from './utils/caseStudyOrder'
 import { isRecent } from './utils/isRecent'
 import { AnimatePresence, motion } from './utils/motion'
 
@@ -34,14 +35,16 @@ function MainPage({ onOpenCase }) {
   )
 
   const filtered = useMemo(() => {
-    return enriched
-      .map((item) => ({ ...item, searchScore: scoreCaseStudy(item, query) }))
-      .filter((item) => {
-        const matchFilter = !filter || item.tags.includes(filter)
-        const matchSearch = !query.trim() || item.searchScore > 0
-        return matchFilter && matchSearch
-      })
-      .sort((a, b) => b.searchScore - a.searchScore)
+    return sortCaseStudies(
+      enriched
+        .map((item) => ({ ...item, searchScore: scoreCaseStudy(item, query) }))
+        .filter((item) => {
+          const matchFilter = !filter || item.tags.includes(filter)
+          const matchSearch = !query.trim() || item.searchScore > 0
+          return matchFilter && matchSearch
+        }),
+      query,
+    )
   }, [enriched, filter, query])
 
   const feedItems = useMemo(() => {
