@@ -1,3 +1,5 @@
+import { useLayoutEffect } from 'react'
+
 import { X } from './icons'
 
 import Pill from './Pill'
@@ -8,7 +10,7 @@ function CaseSectionCard({ title, content, index }) {
     <motion.div
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: index * 0.05 }}
+      transition={{ duration: 0.35, delay: 0.22 + index * 0.06, ease: 'ease-out' }}
       className="min-w-[82vw] sm:min-w-[60vw] lg:min-w-[34vw] rounded-[1.5rem] border border-white/10 bg-white/6 p-5 md:p-6 snap-start"
     >
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -21,6 +23,12 @@ function CaseSectionCard({ title, content, index }) {
 }
 
 function CaseStudyPage({ item, onBack }) {
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  }, [item.id])
+
   const sections = [
     { title: 'Context', content: item.context },
     { title: 'Challenge', content: item.challenge },
@@ -31,7 +39,12 @@ function CaseStudyPage({ item, onBack }) {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="sticky top-0 z-40 border-b border-white/10 bg-black/80 backdrop-blur-xl px-4 md:px-8 lg:px-10">
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.26, ease: 'ease-out', delay: 0.06 }}
+        className="sticky top-0 z-40 border-b border-white/10 bg-black/80 backdrop-blur-xl px-4 md:px-8 lg:px-10"
+      >
         <div className="flex items-center justify-between py-4">
           <button type="button" onClick={onBack} className="inline-flex items-center gap-2 text-sm text-white/75 hover:text-white transition">
             <span>←</span>
@@ -46,9 +59,9 @@ function CaseStudyPage({ item, onBack }) {
             <X size={16} />
           </button>
         </div>
-      </div>
+      </motion.div>
 
-      <section className="px-4 md:px-8 lg:px-10 pt-6 md:pt-8">
+      <motion.section initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }} className="px-4 md:px-8 lg:px-10 pt-6 md:pt-8">
         <div className="relative h-[58vh] md:h-[72vh] rounded-[2rem] overflow-hidden border border-white/10">
           <img src={item.cover} alt={item.title} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-black/92" />
@@ -65,34 +78,40 @@ function CaseStudyPage({ item, onBack }) {
             <p className="mt-4 text-white/72 text-base md:text-2xl leading-relaxed max-w-3xl">{item.subtitle}</p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="px-4 md:px-8 lg:px-10 py-6 md:py-8 border-b border-white/10">
+      <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.16 }} className="px-4 md:px-8 lg:px-10 py-6 md:py-8 border-b border-white/10">
         <div className="flex items-center gap-5 text-white/70 overflow-x-auto no-scrollbar">
           <span className="text-sm uppercase tracking-[0.16em] whitespace-nowrap">Content thread</span>
           <span className="text-sm whitespace-nowrap">5 cards</span>
           <span className="text-sm whitespace-nowrap">Swipe to explore</span>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="px-4 md:px-8 lg:px-10 py-8 md:py-10">
+      <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.2 }} className="px-4 md:px-8 lg:px-10 py-8 md:py-10">
         <div className="flex gap-4 md:gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2">
           {sections.map((section, index) => (
             <CaseSectionCard key={section.title} title={section.title} content={section.content} index={index} />
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {!!item.visuals.length && (
-        <section className="px-4 md:px-8 lg:px-10 pb-20 md:pb-24">
+        <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.24 }} className="px-4 md:px-8 lg:px-10 pb-20 md:pb-24">
           <div className="grid gap-4 md:gap-6 md:grid-cols-2">
             {item.visuals.map((src, index) => (
-              <div key={index} className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.99 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.3 + index * 0.05 }}
+                className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5"
+              >
                 <img src={src} alt={`${item.title} visual ${index + 1}`} className="h-[280px] md:h-[420px] w-full object-cover" />
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
       )}
     </div>
   )

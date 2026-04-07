@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Hero from './components/Hero'
 import FeedCard from './components/FeedCard'
@@ -140,6 +140,13 @@ function DevTestCases() {
 export default function App() {
   const [active, setActive] = useState(null)
 
+  useEffect(() => {
+    document.body.style.overflow = active ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [active])
+
   return (
     <div className="font-serif antialiased bg-black text-white">
       <style>{`
@@ -152,11 +159,29 @@ export default function App() {
 
       <AnimatePresence mode="wait">
         {active ? (
-          <motion.div key="case" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-            <CaseStudyPage item={active} onBack={() => setActive(null)} />
-          </motion.div>
+          <>
+            <motion.div
+              key="overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.24, ease: 'easeOut' }}
+              className="fixed inset-0 z-30 bg-black/85 backdrop-blur-lg"
+              aria-hidden="true"
+            />
+            <motion.div
+              key="case"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.99 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-40"
+            >
+              <CaseStudyPage item={active} onBack={() => setActive(null)} />
+            </motion.div>
+          </>
         ) : (
-          <motion.div key="feed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+          <motion.div key="feed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
             <MainPage onOpenCase={setActive} />
             <DevTestCases />
           </motion.div>
