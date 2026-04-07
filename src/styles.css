@@ -206,3 +206,43 @@ body {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.recent-dot {
+  position: relative;
+  width: 0.55rem;
+  height: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recent-dot__core,
+.recent-dot__pulse {
+  position: absolute;
+  border-radius: 9999px;
+}
+
+.recent-dot__core {
+  width: 0.4rem;
+  height: 0.4rem;
+  background: #ff3b30;
+}
+
+.recent-dot__pulse {
+  width: 0.55rem;
+  height: 0.55rem;
+  background: rgba(255, 59, 48, 0.4);
+  animation: recent-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes recent-ping {
+  0% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.25);
+  }
+}
