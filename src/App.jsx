@@ -6,26 +6,27 @@ import SearchBar from './components/SearchBar'
 import CaseStudyPage from './components/CaseStudyPage'
 import ThemeToggle from './components/ThemeToggle'
 import Rail from './components/Rail'
+import PollCard from './components/PollCard'
+import Pill from './components/Pill'
 import { Mail, Linkedin } from './components/icons'
 import { CASE_STUDIES } from './data/caseStudies'
+import { FILTERS } from './data/filters'
+import { POLLS } from './data/polls'
 import { scoreCaseStudy } from './utils/search'
 import { sortCaseStudies } from './utils/caseStudyOrder'
 import { isRecent } from './utils/isRecent'
 import { AnimatePresence, motion } from './utils/motion'
+import { hasActiveMethodologyFilters, matchesMethodologyFilters } from './utils/methodology'
 
 const RAIL_ORDER = ['Featured', 'App', 'Website', 'AI']
 
-function matchesMethodFilter(item, methodFilter) {
-  if (!methodFilter) return true
-  if (methodFilter === 'qualitative') return item.tags.includes('qualitative research')
-  if (methodFilter === 'quantitative') return item.tags.includes('quantitative research')
-  if (methodFilter === 'mixed-methods') return item.tags.includes('qualitative research') || item.tags.includes('quantitative research')
-  return true
-}
-
 function MainPage({ onOpenCase }) {
-  const [activeMethodFilter, setActiveMethodFilter] = useState(null)
+  const [activeFilters, setActiveFilters] = useState({
+    type: null,
+    techniques: [],
+  })
   const [query, setQuery] = useState('')
+  const [pollIndex, setPollIndex] = useState(0)
 
   const enriched = useMemo(
     () =>
@@ -44,13 +45,13 @@ function MainPage({ onOpenCase }) {
       enriched
         .map((item) => ({ ...item, searchScore: scoreCaseStudy(item, query) }))
         .filter((item) => {
-          const matchMethod = matchesMethodFilter(item, activeMethodFilter)
+          const matchMethodology = matchesMethodologyFilters(item, activeFilters)
           const matchSearch = !query.trim() || item.searchScore > 0
-          return matchMethod && matchSearch
+          return matchMethodology && matchSearch
         }),
       query,
     )
-  }, [enriched, activeMethodFilter, query])
+  }, [enriched, activeFilters, query])
 
   const rails = useMemo(() => {
     const featured = filtered.filter((item) => item.featured).slice(0, 3)
@@ -63,6 +64,36 @@ function MainPage({ onOpenCase }) {
     }
   }, [filtered])
 
+  const hasActiveFilters = hasActiveMethodologyFilters(activeFilters)
+  const railsToRender = useMemo(
+    () => RAIL_ORDER.filter((railName) => railName === 'Featured' || rails[railName].length > 0),
+    [rails],
+  )
+
+  const toggleTypeFilter = (type) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      type: prev.type === type ? null : type,
+    }))
+  }
+
+  const toggleTechniqueFilter = (technique) => {
+    setActiveFilters((prev) => {
+      const hasTechnique = prev.techniques.includes(technique)
+      return {
+        ...prev,
+        techniques: hasTechnique ? prev.techniques.filter((item) => item !== technique) : [...prev.techniques, technique],
+      }
+    })
+  }
+
+  const clearFilters = () => {
+    setActiveFilters({
+      type: null,
+      techniques: [],
+    })
+  }
+
   return (
     <div className="app-shell min-h-screen">
       <Hero onExplore={() => document.getElementById('feed')?.scrollIntoView({ behavior: 'smooth' })} />
@@ -70,24 +101,52 @@ function MainPage({ onOpenCase }) {
       <div className="sticky top-0 z-40 app-topbar backdrop-blur-xl border-y border-subtle">
         <div className="flex flex-col gap-3 px-4 md:px-8 py-3">
           <SearchBar query={query} setQuery={setQuery} />
-          <div className="flex gap-2 overflow-x-auto no-scrollbar">
-            {FILTERS.map((method) => (
-              <Pill key={method} active={activeMethodFilter === method} onClick={() => setActiveMethodFilter((prev) => (prev === method ? null : method))}>
-                {method}
-              </Pill>
-            ))}
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted">Method type</p>
+              {hasActiveFilters && (
+                <button type="button" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.14em] text-secondary hover:text-primary transition">
+                  Clear filters
+                </button>
+              )}
+            </div>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+              {FILTERS.type.map((type) => (
+                <Pill key={type} active={activeFilters.type === type} onClick={() => toggleTypeFilter(type)}>
+                  {type}
+                </Pill>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-muted">Research techniques</p>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+              {FILTERS.techniques.map((technique) => (
+                <Pill key={technique} active={activeFilters.techniques.includes(technique)} onClick={() => toggleTechniqueFilter(technique)}>
+                  {technique}
+                </Pill>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       <main id="feed" className="px-4 md:px-8 lg:px-10 py-6 md:py-8 space-y-8 md:space-y-10">
-        {RAIL_ORDER.map((railName) => (
+        {railsToRender.map((railName) => (
           <Rail
             key={railName}
             title={railName}
             items={rails[railName]}
             onOpen={onOpenCase}
-            emptyMessage={`No ${railName.toLowerCase()} case studies match your filters.`}
+            emptyMessage={
+              railName === 'Featured'
+                ? hasActiveFilters
+                  ? 'No featured case studies match your filters.'
+                  : 'No featured case studies available.'
+                : `No ${railName.toLowerCase()} case studies match your filters.`
+            }
             renderCard={(item, onOpen) => <FeedCard key={item.id} item={item} onOpen={onOpen} variant={railName === 'Featured' ? 'featured' : 'standard'} />}
           />
         ))}
