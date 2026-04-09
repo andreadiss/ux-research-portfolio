@@ -291,3 +291,39 @@ html {
     transform: scale(2.8);
   }
 }
+
+.rail-scroller {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding: 0.15rem 0.1rem 0.55rem;
+  scroll-behavior: smooth;
+}
+
+.rail-card {
+  flex: 0 0 82%;
+  min-width: 0;
+  scroll-snap-align: start;
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+
+.rail-card:hover {
+  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.44);
+}
+
+@media (min-width: 640px) {
+  .rail-card {
+    flex-basis: 44%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rail-card {
+    flex-basis: 28%;
+  }
+
+  .rail-card--featured {
+    flex-basis: 36%;
+  }
+}
