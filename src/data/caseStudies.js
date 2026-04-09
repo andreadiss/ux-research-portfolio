@@ -86,6 +86,7 @@ const WEBSITE_CASE_STUDIES = [
   createCaseStudy({
     id: 'web-1',
     title: 'Editorial Platform Evolution',
+    featured: true,
     category: 'Website',
     tags: ['qualitative research', 'website'],
     date: '2026-02-20',
@@ -137,6 +138,7 @@ const AI_CASE_STUDIES = [
   createCaseStudy({
     id: 'ai-1',
     title: 'AI Personalization System',
+    featured: true,
     category: 'AI',
     tags: ['ai', 'qualitative research'],
     date: '2026-04-01',
