@@ -2,16 +2,12 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import Hero from './components/Hero'
 import FeedCard from './components/FeedCard'
-import PollCard from './components/PollCard'
 import SearchBar from './components/SearchBar'
 import CaseStudyPage from './components/CaseStudyPage'
-import Pill from './components/Pill'
 import ThemeToggle from './components/ThemeToggle'
 import Rail from './components/Rail'
 import { Mail, Linkedin } from './components/icons'
 import { CASE_STUDIES } from './data/caseStudies'
-import { FILTERS } from './data/filters'
-import { POLLS } from './data/polls'
 import { scoreCaseStudy } from './utils/search'
 import { sortCaseStudies } from './utils/caseStudyOrder'
 import { isRecent } from './utils/isRecent'
@@ -28,9 +24,7 @@ function matchesMethodFilter(item, filter) {
 }
 
 function MainPage({ onOpenCase }) {
-  const [filter, setFilter] = useState(null)
   const [query, setQuery] = useState('')
-  const [pollIndex, setPollIndex] = useState(0)
 
   const enriched = useMemo(
     () =>
