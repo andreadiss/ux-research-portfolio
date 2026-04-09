@@ -51,11 +51,14 @@ function MainPage({ onOpenCase }) {
 
     const featured = filtered.find((item) => item.featured) ?? filtered[0]
     const remainingAfterFeatured = filtered.filter((item) => item.id !== featured.id)
-    const recent = [...remainingAfterFeatured].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0] ?? null
-    const remaining = remainingAfterFeatured.filter((item) => item.id !== recent?.id)
+    const firstRowSmall = remainingAfterFeatured.slice(0, 2)
+    const feedPool = remainingAfterFeatured.slice(firstRowSmall.length)
+    const recent = [...feedPool].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0] ?? null
+    const remaining = feedPool.filter((item) => item.id !== recent?.id)
 
     return {
       featured,
+      firstRowSmall,
       rowTwoCases: remaining.slice(0, 2),
       rowThreeSmall: remaining[2] ?? null,
       recent,
@@ -84,8 +87,19 @@ function MainPage({ onOpenCase }) {
           <div className="col-span-full rounded-[1.6rem] border border-subtle bg-surface p-10 text-center text-muted">No matches found. Try broader terms.</div>
         ) : (
           <>
-            <div>
-              <FeedCard item={editorialFeed.featured} onOpen={onOpenCase} variant="featured" badgeLabel="Featured" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6 items-stretch">
+              <div className="lg:col-span-2">
+                <FeedCard item={editorialFeed.featured} onOpen={onOpenCase} variant="featured" badgeLabel="Featured" />
+              </div>
+              {editorialFeed.firstRowSmall.length > 0 ? (
+                <div className="space-y-5 md:space-y-6">
+                  {editorialFeed.firstRowSmall.map((item) => (
+                    <FeedCard key={item.id} item={item} onOpen={onOpenCase} variant="small" />
+                  ))}
+                </div>
+              ) : (
+                <div className="hidden lg:block" />
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
