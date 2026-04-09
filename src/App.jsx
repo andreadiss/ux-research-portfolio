@@ -15,15 +15,16 @@ import { AnimatePresence, motion } from './utils/motion'
 
 const RAIL_ORDER = ['Featured', 'App', 'Website', 'AI']
 
-function matchesMethodFilter(item, filter) {
-  if (!filter) return true
-  if (filter === 'qualitative') return item.tags.includes('qualitative research')
-  if (filter === 'quantitative') return item.tags.includes('quantitative research')
-  if (filter === 'mixed-methods') return item.tags.includes('qualitative research') || item.tags.includes('quantitative research')
+function matchesMethodFilter(item, methodFilter) {
+  if (!methodFilter) return true
+  if (methodFilter === 'qualitative') return item.tags.includes('qualitative research')
+  if (methodFilter === 'quantitative') return item.tags.includes('quantitative research')
+  if (methodFilter === 'mixed-methods') return item.tags.includes('qualitative research') || item.tags.includes('quantitative research')
   return true
 }
 
 function MainPage({ onOpenCase }) {
+  const [activeMethodFilter, setActiveMethodFilter] = useState(null)
   const [query, setQuery] = useState('')
 
   const enriched = useMemo(
@@ -43,13 +44,13 @@ function MainPage({ onOpenCase }) {
       enriched
         .map((item) => ({ ...item, searchScore: scoreCaseStudy(item, query) }))
         .filter((item) => {
-          const matchMethod = matchesMethodFilter(item, filter)
+          const matchMethod = matchesMethodFilter(item, activeMethodFilter)
           const matchSearch = !query.trim() || item.searchScore > 0
           return matchMethod && matchSearch
         }),
       query,
     )
-  }, [enriched, filter, query])
+  }, [enriched, activeMethodFilter, query])
 
   const rails = useMemo(() => {
     const featured = filtered.filter((item) => item.featured).slice(0, 3)
@@ -71,7 +72,7 @@ function MainPage({ onOpenCase }) {
           <SearchBar query={query} setQuery={setQuery} />
           <div className="flex gap-2 overflow-x-auto no-scrollbar">
             {FILTERS.map((method) => (
-              <Pill key={method} active={filter === method} onClick={() => setFilter((prev) => (prev === method ? null : method))}>
+              <Pill key={method} active={activeMethodFilter === method} onClick={() => setActiveMethodFilter((prev) => (prev === method ? null : method))}>
                 {method}
               </Pill>
             ))}
