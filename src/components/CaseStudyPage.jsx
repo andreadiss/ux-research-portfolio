@@ -4,6 +4,7 @@ import { X } from './icons'
 
 import Pill from './Pill'
 import { motion } from '../utils/motion'
+import { getMethodologyTags } from '../utils/methodology'
 
 function CaseSectionCard({ title, content, index }) {
   return (
@@ -28,6 +29,8 @@ function CaseStudyPage({ item, onBack }) {
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
   }, [item.id])
+
+  const methodologyTags = getMethodologyTags(item)
 
   const sections = [
     { title: 'Context', content: item.context },
@@ -63,7 +66,7 @@ function CaseStudyPage({ item, onBack }) {
           <div className="absolute inset-0 overlay-image-bottom pointer-events-none" />
           <div className="absolute left-0 right-0 top-0 p-5 md:p-6 flex flex-wrap gap-2">
             <span className="px-3 py-1 rounded-full text-[10px] uppercase tracking-widest chip-category">{item.category}</span>
-            {item.tags.map((tag) => (
+            {methodologyTags.map((tag) => (
               <span key={tag} className="px-3 py-1 rounded-full text-[10px] uppercase tracking-widest chip-default">
                 {tag}
               </span>

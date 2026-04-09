@@ -20,7 +20,10 @@ export function scoreCaseStudy(item, query) {
   const title = normalizeText(item.title)
   const subtitle = normalizeText(item.subtitle)
   const category = normalizeText(item.category)
-  const tags = item.tags.map(normalizeText).join(' ')
+  const legacyTags = Array.isArray(item.tags) ? item.tags : []
+  const methodType = item.methodologies?.type ? [item.methodologies.type] : []
+  const methodTechniques = Array.isArray(item.methodologies?.techniques) ? item.methodologies.techniques : []
+  const tags = [...legacyTags, ...methodType, ...methodTechniques].map(normalizeText).join(' ')
   const body = normalizeText([item.context, item.challenge, item.approach, item.insights, item.impact].join(' '))
 
   let score = 0
