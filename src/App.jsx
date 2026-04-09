@@ -2,24 +2,21 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import Hero from './components/Hero'
 import FeedCard from './components/FeedCard'
-import PollCard from './components/PollCard'
 import SearchBar from './components/SearchBar'
 import CaseStudyPage from './components/CaseStudyPage'
-import Pill from './components/Pill'
 import ThemeToggle from './components/ThemeToggle'
+import Rail from './components/Rail'
 import { Mail, Linkedin } from './components/icons'
 import { CASE_STUDIES } from './data/caseStudies'
-import { FILTERS } from './data/filters'
-import { POLLS } from './data/polls'
 import { scoreCaseStudy } from './utils/search'
 import { sortCaseStudies } from './utils/caseStudyOrder'
 import { isRecent } from './utils/isRecent'
 import { AnimatePresence, motion } from './utils/motion'
 
+const RAIL_ORDER = ['Featured', 'App', 'Website', 'AI']
+
 function MainPage({ onOpenCase }) {
-  const [filter, setFilter] = useState(null)
   const [query, setQuery] = useState('')
-  const [pollIndex, setPollIndex] = useState(0)
 
   const enriched = useMemo(
     () =>
@@ -38,30 +35,21 @@ function MainPage({ onOpenCase }) {
       enriched
         .map((item) => ({ ...item, searchScore: scoreCaseStudy(item, query) }))
         .filter((item) => {
-          const matchFilter = !filter || item.tags.includes(filter)
           const matchSearch = !query.trim() || item.searchScore > 0
-          return matchFilter && matchSearch
+          return matchSearch
         }),
       query,
     )
-  }, [enriched, filter, query])
+  }, [enriched, query])
 
-  const editorialFeed = useMemo(() => {
-    if (filtered.length === 0) return null
-
-    const featured = filtered.find((item) => item.featured) ?? filtered[0]
-    const remainingAfterFeatured = filtered.filter((item) => item.id !== featured.id)
-    const firstRowSmall = remainingAfterFeatured.slice(0, 2)
-    const feedPool = remainingAfterFeatured.slice(firstRowSmall.length)
-    const recent = [...feedPool].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0] ?? null
-    const remaining = feedPool.filter((item) => item.id !== recent?.id)
+  const rails = useMemo(() => {
+    const featured = filtered.filter((item) => item.featured).slice(0, 3)
 
     return {
-      featured,
-      firstRowSmall,
-      rowTwoCases: remaining.slice(0, 2),
-      rowThreeSmall: remaining[2] ?? null,
-      recent,
+      Featured: featured,
+      App: filtered.filter((item) => item.category === 'App'),
+      Website: filtered.filter((item) => item.category === 'Website'),
+      AI: filtered.filter((item) => item.category === 'AI'),
     }
   }, [filtered])
 
@@ -72,53 +60,20 @@ function MainPage({ onOpenCase }) {
       <div className="sticky top-0 z-40 app-topbar backdrop-blur-xl border-y border-subtle">
         <div className="flex flex-col gap-3 px-4 md:px-8 py-3">
           <SearchBar query={query} setQuery={setQuery} />
-          <div className="flex gap-2 overflow-x-auto no-scrollbar">
-            {FILTERS.map((f) => (
-              <Pill key={f} active={filter === f} onClick={() => setFilter((prev) => (prev === f ? null : f))}>
-                {f}
-              </Pill>
-            ))}
-          </div>
         </div>
       </div>
 
-      <main id="feed" className="px-4 md:px-8 lg:px-10 py-6 md:py-8 space-y-5 md:space-y-6">
-        {!editorialFeed ? (
-          <div className="col-span-full rounded-[1.6rem] border border-subtle bg-surface p-10 text-center text-muted">No matches found. Try broader terms.</div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6 items-stretch">
-              <div className="lg:col-span-2">
-                <FeedCard item={editorialFeed.featured} onOpen={onOpenCase} variant="featured" badgeLabel="Featured" />
-              </div>
-              {editorialFeed.firstRowSmall.length > 0 ? (
-                <div className="space-y-5 md:space-y-6">
-                  {editorialFeed.firstRowSmall.map((item) => (
-                    <FeedCard key={item.id} item={item} onOpen={onOpenCase} variant="small" />
-                  ))}
-                </div>
-              ) : (
-                <div className="hidden lg:block" />
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-              {editorialFeed.rowTwoCases.map((item) => (
-                <FeedCard key={item.id} item={item} onOpen={onOpenCase} variant="small" />
-              ))}
-              <PollCard key={`poll-${pollIndex}`} poll={POLLS[pollIndex]} onNext={() => setPollIndex((prev) => (prev + 1) % POLLS.length)} />
-            </div>
-
-            {(editorialFeed.rowThreeSmall || editorialFeed.recent) && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                {editorialFeed.rowThreeSmall ? <FeedCard item={editorialFeed.rowThreeSmall} onOpen={onOpenCase} variant="small" /> : <div className="hidden lg:block" />}
-                {editorialFeed.recent ? (
-                  <FeedCard item={editorialFeed.recent} onOpen={onOpenCase} variant="recent" badgeLabel="Recent" badgePulse />
-                ) : null}
-              </div>
-            )}
-          </>
-        )}
+      <main id="feed" className="px-4 md:px-8 lg:px-10 py-6 md:py-8 space-y-8 md:space-y-10">
+        {RAIL_ORDER.map((railName) => (
+          <Rail
+            key={railName}
+            title={railName}
+            items={rails[railName]}
+            onOpen={onOpenCase}
+            emptyMessage={`No ${railName.toLowerCase()} case studies match your search.`}
+            renderCard={(item, onOpen) => <FeedCard key={item.id} item={item} onOpen={onOpen} variant={railName === 'Featured' ? 'featured' : 'standard'} />}
+          />
+        ))}
       </main>
 
       <section className="px-4 md:px-8 lg:px-10 py-16 md:py-24 border-t border-subtle">
@@ -220,7 +175,7 @@ export default function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.24, ease: 'easeOut' }}
               className="fixed inset-0 z-30 backdrop-blur-lg pointer-events-none"
-              style={{ background: "var(--overlay-strong)" }}
+              style={{ background: 'var(--overlay-strong)' }}
               aria-hidden="true"
             />
             <motion.div
