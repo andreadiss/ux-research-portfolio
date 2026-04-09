@@ -15,6 +15,14 @@ import { AnimatePresence, motion } from './utils/motion'
 
 const RAIL_ORDER = ['Featured', 'App', 'Website', 'AI']
 
+function matchesMethodFilter(item, filter) {
+  if (!filter) return true
+  if (filter === 'qualitative') return item.tags.includes('qualitative research')
+  if (filter === 'quantitative') return item.tags.includes('quantitative research')
+  if (filter === 'mixed-methods') return item.tags.includes('qualitative research') || item.tags.includes('quantitative research')
+  return true
+}
+
 function MainPage({ onOpenCase }) {
   const [query, setQuery] = useState('')
 
@@ -35,12 +43,13 @@ function MainPage({ onOpenCase }) {
       enriched
         .map((item) => ({ ...item, searchScore: scoreCaseStudy(item, query) }))
         .filter((item) => {
+          const matchMethod = matchesMethodFilter(item, filter)
           const matchSearch = !query.trim() || item.searchScore > 0
-          return matchSearch
+          return matchMethod && matchSearch
         }),
       query,
     )
-  }, [enriched, query])
+  }, [enriched, filter, query])
 
   const rails = useMemo(() => {
     const featured = filtered.filter((item) => item.featured).slice(0, 3)
@@ -60,6 +69,13 @@ function MainPage({ onOpenCase }) {
       <div className="sticky top-0 z-40 app-topbar backdrop-blur-xl border-y border-subtle">
         <div className="flex flex-col gap-3 px-4 md:px-8 py-3">
           <SearchBar query={query} setQuery={setQuery} />
+          <div className="flex gap-2 overflow-x-auto no-scrollbar">
+            {FILTERS.map((method) => (
+              <Pill key={method} active={filter === method} onClick={() => setFilter((prev) => (prev === method ? null : method))}>
+                {method}
+              </Pill>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -70,10 +86,15 @@ function MainPage({ onOpenCase }) {
             title={railName}
             items={rails[railName]}
             onOpen={onOpenCase}
-            emptyMessage={`No ${railName.toLowerCase()} case studies match your search.`}
+            emptyMessage={`No ${railName.toLowerCase()} case studies match your filters.`}
             renderCard={(item, onOpen) => <FeedCard key={item.id} item={item} onOpen={onOpen} variant={railName === 'Featured' ? 'featured' : 'standard'} />}
           />
         ))}
+
+        <section aria-label="Poll" className="space-y-3">
+          <h2 className="font-heading text-xl md:text-2xl tracking-tight">Poll</h2>
+          <PollCard poll={POLLS[pollIndex]} onNext={() => setPollIndex((prev) => (prev + 1) % POLLS.length)} />
+        </section>
       </main>
 
       <section className="px-4 md:px-8 lg:px-10 py-16 md:py-24 border-t border-subtle">

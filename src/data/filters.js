@@ -1,1 +1,1 @@
-export const FILTERS = ['quantitative research', 'qualitative research', 'apps', 'website', 'Ai']
+export const FILTERS = ['qualitative', 'quantitative', 'mixed-methods']
